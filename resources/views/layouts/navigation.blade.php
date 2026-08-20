@@ -18,6 +18,20 @@
                     <x-nav-link :href="route('products.index')" :active="request()->routeIs('products.*')">
                         {{ __('Productos') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('cart.index')" :active="request()->routeIs('cart.*')" class="inline-flex items-center gap-1.5">
+                        <svg class="w-5 h-5 text-gray-500 group-hover:text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/>
+                        </svg>
+                        <span>{{ __('Carrito') }}</span>
+                        @php
+                            $cartCount = app(\App\Services\CartService::class)->getCount();
+                        @endphp
+                        @if($cartCount > 0)
+                            <span class="bg-purple-600 text-white text-xs font-bold px-2 py-0.5 rounded-full ml-1 animate-pulse">
+                                {{ $cartCount }}
+                            </span>
+                        @endif
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -80,6 +94,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('products.index')" :active="request()->routeIs('products.*')">
                 {{ __('Productos') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('cart.index')" :active="request()->routeIs('cart.*')">
+                {{ __('Carrito') }} ({{ app(\App\Services\CartService::class)->getCount() }})
             </x-responsive-nav-link>
         </div>
 

@@ -30,8 +30,14 @@
                             <p class="text-gray-600">{{ $product->description }}</p>
                         </div>
 
+                        @if(session('success'))
+                            <div class="mt-4 bg-green-50 border-l-4 border-green-500 p-3 rounded-r-lg text-sm text-green-800 font-medium">
+                                {{ session('success') }}
+                            </div>
+                        @endif
+
                         @if($product->stock > 0)
-                            <form action="#" method="POST" class="mt-6">
+                            <form action="{{ route('cart.add') }}" method="POST" class="mt-6">
                                 @csrf
                                 <input type="hidden" name="product_id" value="{{ $product->id }}">
 
