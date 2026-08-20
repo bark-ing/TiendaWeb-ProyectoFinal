@@ -5,30 +5,30 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('home') }}">
+                    <a href="{{ route('inicio') }}">
                         <span class="text-xl font-bold text-purple-600">Vexians Boutique</span>
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('home')" :active="request()->routeIs('home')">
+                    <x-nav-link :href="route('inicio')" :active="request()->routeIs('inicio')">
                         {{ __('Inicio') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('products.index')" :active="request()->routeIs('products.*')">
+                    <x-nav-link :href="route('productos.index')" :active="request()->routeIs('productos.*')">
                         {{ __('Productos') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('cart.index')" :active="request()->routeIs('cart.*')" class="inline-flex items-center gap-1.5">
+                    <x-nav-link :href="route('carrito.index')" :active="request()->routeIs('carrito.*')" class="inline-flex items-center gap-1.5">
                         <svg class="w-5 h-5 text-gray-500 group-hover:text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/>
                         </svg>
                         <span>{{ __('Carrito') }}</span>
                         @php
-                            $cartCount = app(\App\Services\CartService::class)->getCount();
+                            $carritoCantidad = app(\App\Services\CartService::class)->obtenerCantidad();
                         @endphp
-                        @if($cartCount > 0)
+                        @if($carritoCantidad > 0)
                             <span class="bg-purple-600 text-white text-xs font-bold px-2 py-0.5 rounded-full ml-1 animate-pulse">
-                                {{ $cartCount }}
+                                {{ $carritoCantidad }}
                             </span>
                         @endif
                     </x-nav-link>
@@ -54,6 +54,9 @@
                         <x-slot name="content">
                             <x-dropdown-link :href="route('profile.edit')">
                                 {{ __('Mi Perfil') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('pedidos.index')">
+                                {{ __('Mis Pedidos') }}
                             </x-dropdown-link>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
@@ -89,14 +92,14 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('home')" :active="request()->routeIs('home')">
+            <x-responsive-nav-link :href="route('inicio')" :active="request()->routeIs('inicio')">
                 {{ __('Inicio') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('products.index')" :active="request()->routeIs('products.*')">
+            <x-responsive-nav-link :href="route('productos.index')" :active="request()->routeIs('productos.*')">
                 {{ __('Productos') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('cart.index')" :active="request()->routeIs('cart.*')">
-                {{ __('Carrito') }} ({{ app(\App\Services\CartService::class)->getCount() }})
+            <x-responsive-nav-link :href="route('carrito.index')" :active="request()->routeIs('carrito.*')">
+                {{ __('Carrito') }} ({{ app(\App\Services\CartService::class)->obtenerCantidad() }})
             </x-responsive-nav-link>
         </div>
 
@@ -110,6 +113,9 @@
                 <div class="mt-3 space-y-1">
                     <x-responsive-nav-link :href="route('profile.edit')">
                         {{ __('Mi Perfil') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('pedidos.index')">
+                        {{ __('Mis Pedidos') }}
                     </x-responsive-nav-link>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf

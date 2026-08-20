@@ -2,39 +2,39 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
-use App\Models\Product;
+use App\Models\Categoria;
+use App\Models\Producto;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Product::where('is_active', true);
+        $query = Producto::where('activo', true);
 
         if ($request->filled('categoria')) {
-            $query->where('category_id', $request->categoria);
+            $query->where('categoria_id', $request->categoria);
         }
 
         if ($request->filled('precio_min')) {
-            $query->where('price', '>=', $request->precio_min);
+            $query->where('precio', '>=', $request->precio_min);
         }
 
         if ($request->filled('precio_max')) {
-            $query->where('price', '<=', $request->precio_max);
+            $query->where('precio', '<=', $request->precio_max);
         }
 
-        $products = $query->paginate(12);
-        $categories = Category::all();
+        $productos = $query->paginate(12);
+        $categorias = Categoria::all();
 
-        return view('products.index', compact('products', 'categories'));
+        return view('products.index', compact('productos', 'categorias'));
     }
 
-    public function show($slug)
+    public function ver($slug)
     {
-        $product = Product::where('slug', $slug)->firstOrFail();
+        $producto = Producto::where('slug', $slug)->firstOrFail();
 
-        $id = (int) $product->id;
+        $id = (int) $producto->id;
         $idsVistos = json_decode(request()->cookie('recently_viewed', '[]'), true) ?? [];
         $idsVistos = array_map('intval', $idsVistos);
         $idsVistos = array_values(array_diff($idsVistos, [$id]));
@@ -43,28 +43,28 @@ class ProductController extends Controller
 
         $cookie = cookie('recently_viewed', json_encode($idsVistos), 45000);
 
-        return response()->view('products.show', compact('product'))->cookie($cookie);
+        return response()->view('products.show', compact('producto'))->cookie($cookie);
     }
 
-    public function category($slug)
+    public function categoria($slug)
     {
-        $category = Category::where('slug', $slug)->firstOrFail();
-        $products = Product::where('category_id', $category->id)
-            ->where('is_active', true)
+        $categoria = Categoria::where('slug', $slug)->firstOrFail();
+        $productos = Producto::where('categoria_id', $categoria->id)
+            ->where('activo', true)
             ->paginate(12);
-        $categories = Category::all();
+        $categorias = Categoria::all();
 
-        return view('products.index', compact('products', 'categories'));
+        return view('products.index', compact('productos', 'categorias'));
     }
 
-    public function search(Request $request)
+    public function buscar(Request $request)
     {
-        $query = $request->input('q');
-        $products = Product::where('is_active', true)
-            ->where('name', 'like', "%{$query}%")
+        $busqueda = $request->input('q');
+        $productos = Producto::where('activo', true)
+            ->where('nombre', 'like', "%{$busqueda}%")
             ->paginate(12);
-        $categories = Category::all();
+        $categorias = Categoria::all();
 
-        return view('products.index', compact('products', 'categories'));
+        return view('products.index', compact('productos', 'categorias'));
     }
 }

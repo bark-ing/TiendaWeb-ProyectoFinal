@@ -2,105 +2,105 @@
 
 namespace App\Services;
 
-use App\Models\Product;
+use App\Models\Producto;
 
 class CartService
 {
-    public function getCart()
+    public function obtenerCarrito()
     {
         return session()->get('cart', []);
     }
 
-    public function add($productId, $quantity = 1, $size = null, $color = null)
+    public function agregar($productoId, $cantidad = 1, $talla = null, $color = null)
     {
-        $product = Product::findOrFail($productId);
-        $cart = $this->getCart();
+        $producto = Producto::findOrFail($productoId);
+        $carrito = $this->obtenerCarrito();
 
-        $cartKey = $productId . '_' . ($size ?? 'def') . '_' . ($color ?? 'def');
+        $claveCarrito = $productoId . '_' . ($talla ?? 'def') . '_' . ($color ?? 'def');
 
-        if (isset($cart[$cartKey])) {
-            $cart[$cartKey]['quantity'] += (int) $quantity;
+        if (isset($carrito[$claveCarrito])) {
+            $carrito[$claveCarrito]['cantidad'] += (int) $cantidad;
         } else {
-            $cart[$cartKey] = [
-                'cart_key' => $cartKey,
-                'product_id' => $product->id,
-                'name' => $product->name,
-                'slug' => $product->slug,
-                'image' => $product->image,
-                'price' => (float) $product->price,
-                'quantity' => (int) $quantity,
-                'size' => $size,
+            $carrito[$claveCarrito] = [
+                'clave_carrito' => $claveCarrito,
+                'producto_id' => $producto->id,
+                'nombre' => $producto->nombre,
+                'slug' => $producto->slug,
+                'imagen' => $producto->imagen,
+                'precio' => (float) $producto->precio,
+                'cantidad' => (int) $cantidad,
+                'talla' => $talla,
                 'color' => $color,
                 'subtotal' => 0,
             ];
         }
 
-        if ($product->stock > 0 && $cart[$cartKey]['quantity'] > $product->stock) {
-            $cart[$cartKey]['quantity'] = $product->stock;
+        if ($producto->stock > 0 && $carrito[$claveCarrito]['cantidad'] > $producto->stock) {
+            $carrito[$claveCarrito]['cantidad'] = $producto->stock;
         }
 
-        $cart[$cartKey]['subtotal'] = $cart[$cartKey]['price'] * $cart[$cartKey]['quantity'];
+        $carrito[$claveCarrito]['subtotal'] = $carrito[$claveCarrito]['precio'] * $carrito[$claveCarrito]['cantidad'];
 
-        session()->put('cart', $cart);
+        session()->put('cart', $carrito);
 
-        return $cart;
+        return $carrito;
     }
 
-    public function update($cartKey, $quantity)
+    public function actualizar($claveCarrito, $cantidad)
     {
-        $cart = $this->getCart();
+        $carrito = $this->obtenerCarrito();
 
-        if (isset($cart[$cartKey])) {
-            $product = Product::find($cart[$cartKey]['product_id']);
-            $maxStock = $product ? $product->stock : 99;
+        if (isset($carrito[$claveCarrito])) {
+            $producto = Producto::find($carrito[$claveCarrito]['producto_id']);
+            $maxStock = $producto ? $producto->stock : 99;
 
-            $qty = max(1, min((int) $quantity, $maxStock));
-            $cart[$cartKey]['quantity'] = $qty;
-            $cart[$cartKey]['subtotal'] = $cart[$cartKey]['price'] * $qty;
+            $cant = max(1, min((int) $cantidad, $maxStock));
+            $carrito[$claveCarrito]['cantidad'] = $cant;
+            $carrito[$claveCarrito]['subtotal'] = $carrito[$claveCarrito]['precio'] * $cant;
 
-            session()->put('cart', $cart);
+            session()->put('cart', $carrito);
         }
 
-        return $cart;
+        return $carrito;
     }
 
-    public function remove($cartKey)
+    public function eliminar($claveCarrito)
     {
-        $cart = $this->getCart();
+        $carrito = $this->obtenerCarrito();
 
-        if (isset($cart[$cartKey])) {
-            unset($cart[$cartKey]);
-            session()->put('cart', $cart);
+        if (isset($carrito[$claveCarrito])) {
+            unset($carrito[$claveCarrito]);
+            session()->put('cart', $carrito);
         }
 
-        return $cart;
+        return $carrito;
     }
 
-    public function clear()
+    public function vaciar()
     {
         session()->forget('cart');
     }
 
-    public function getSubtotal()
+    public function obtenerSubtotal()
     {
-        $cart = $this->getCart();
+        $carrito = $this->obtenerCarrito();
         $subtotal = 0;
 
-        foreach ($cart as $item) {
-            $subtotal += $item['price'] * $item['quantity'];
+        foreach ($carrito as $item) {
+            $subtotal += $item['precio'] * $item['cantidad'];
         }
 
         return $subtotal;
     }
 
-    public function getTax()
+    public function obtenerImpuesto()
     {
-        return $this->getSubtotal() * 0.13;
+        return $this->obtenerSubtotal() * 0.13;
     }
 
-    public function getShipping()
+    public function obtenerEnvio()
     {
-        $subtotal = $this->getSubtotal();
+        $subtotal = $this->obtenerSubtotal();
         if ($subtotal == 0) {
             return 0;
         }
@@ -108,20 +108,20 @@ class CartService
         return $subtotal > 50000 ? 0 : 3500;
     }
 
-    public function getTotal()
+    public function obtenerTotal()
     {
-        return $this->getSubtotal() + $this->getTax() + $this->getShipping();
+        return $this->obtenerSubtotal() + $this->obtenerImpuesto() + $this->obtenerEnvio();
     }
 
-    public function getCount()
+    public function obtenerCantidad()
     {
-        $cart = $this->getCart();
-        $count = 0;
+        $carrito = $this->obtenerCarrito();
+        $cantidad = 0;
 
-        foreach ($cart as $item) {
-            $count += $item['quantity'];
+        foreach ($carrito as $item) {
+            $cantidad += $item['cantidad'];
         }
 
-        return $count;
+        return $cantidad;
     }
 }

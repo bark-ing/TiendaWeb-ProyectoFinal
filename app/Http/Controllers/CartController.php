@@ -16,56 +16,56 @@ class CartController extends Controller
 
     public function index()
     {
-        $cart = $this->cartService->getCart();
-        $subtotal = $this->cartService->getSubtotal();
-        $tax = $this->cartService->getTax();
-        $shipping = $this->cartService->getShipping();
-        $total = $this->cartService->getTotal();
+        $carrito = $this->cartService->obtenerCarrito();
+        $subtotal = $this->cartService->obtenerSubtotal();
+        $impuesto = $this->cartService->obtenerImpuesto();
+        $envio = $this->cartService->obtenerEnvio();
+        $total = $this->cartService->obtenerTotal();
 
-        return view('cart.index', compact('cart', 'subtotal', 'tax', 'shipping', 'total'));
+        return view('cart.index', compact('carrito', 'subtotal', 'impuesto', 'envio', 'total'));
     }
 
-    public function add(Request $request)
+    public function agregar(Request $request)
     {
         $request->validate([
-            'product_id' => 'required|exists:products,id',
-            'quantity' => 'required|integer|min:1',
-            'size' => 'nullable|string',
+            'producto_id' => 'required|exists:productos,id',
+            'cantidad' => 'required|integer|min:1',
+            'talla' => 'nullable|string',
             'color' => 'nullable|string',
         ]);
 
-        $this->cartService->add(
-            $request->product_id,
-            $request->quantity,
-            $request->size,
+        $this->cartService->agregar(
+            $request->producto_id,
+            $request->cantidad,
+            $request->talla,
             $request->color
         );
 
-        return redirect()->route('cart.index')->with('success', '¡Producto agregado al carrito exitosamente!');
+        return redirect()->route('carrito.index')->with('success', '¡Producto agregado al carrito exitosamente!');
     }
 
-    public function update(Request $request, $id)
+    public function actualizar(Request $request, $id)
     {
         $request->validate([
-            'quantity' => 'required|integer|min:1',
+            'cantidad' => 'required|integer|min:1',
         ]);
 
-        $this->cartService->update($id, $request->quantity);
+        $this->cartService->actualizar($id, $request->cantidad);
 
-        return redirect()->route('cart.index')->with('success', 'Carrito actualizado correctamente.');
+        return redirect()->route('carrito.index')->with('success', 'Carrito actualizado correctamente.');
     }
 
-    public function remove($id)
+    public function eliminar($id)
     {
-        $this->cartService->remove($id);
+        $this->cartService->eliminar($id);
 
-        return redirect()->route('cart.index')->with('success', 'Producto eliminado del carrito.');
+        return redirect()->route('carrito.index')->with('success', 'Producto eliminado del carrito.');
     }
 
-    public function clear()
+    public function vaciar()
     {
-        $this->cartService->clear();
+        $this->cartService->vaciar();
 
-        return redirect()->route('cart.index')->with('success', 'El carrito ha sido vaciado.');
+        return redirect()->route('carrito.index')->with('success', 'El carrito ha sido vaciado.');
     }
 }

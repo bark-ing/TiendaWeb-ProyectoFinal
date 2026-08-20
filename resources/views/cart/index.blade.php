@@ -27,15 +27,15 @@
                 </div>
             @endif
 
-            @if(count($cart) > 0)
+            @if(count($carrito) > 0)
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <!-- Lista de Productos -->
                     <div class="lg:col-span-2 space-y-4">
                         <div class="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden">
                             <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-white">
-                                <h2 class="font-bold text-gray-900 text-lg">Productos en tu carrito ({{ count($cart) }})</h2>
+                                <h2 class="font-bold text-gray-900 text-lg">Productos en tu carrito ({{ count($carrito) }})</h2>
                                 
-                                <!-- Botón Abrir Modal Vaciar -->
+                                <!-- Boton Abrir Modal Vaciar -->
                                 <button type="button" @click="showModal = true" class="text-sm text-red-600 hover:text-red-800 font-semibold transition flex items-center gap-1.5 px-3 py-1.5 rounded-lg hover:bg-red-50">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
@@ -45,22 +45,22 @@
                             </div>
 
                             <div class="divide-y divide-gray-100">
-                                @foreach($cart as $key => $item)
+                                @foreach($carrito as $clave => $item)
                                     <div class="p-6 flex flex-col sm:flex-row items-center gap-4 sm:gap-6 hover:bg-gray-50/50 transition">
                                         <!-- Imagen -->
                                         <div class="w-24 h-24 flex-shrink-0 bg-gray-100 rounded-lg overflow-hidden border border-gray-200">
-                                            <img src="{{ asset($item['image']) }}" alt="{{ $item['name'] }}" class="w-full h-full object-cover">
+                                            <img src="{{ asset($item['imagen']) }}" alt="{{ $item['nombre'] }}" class="w-full h-full object-cover">
                                         </div>
 
                                         <!-- Detalles del Producto -->
                                         <div class="flex-1 text-center sm:text-left">
-                                            <a href="{{ route('products.show', $item['slug']) }}" class="font-bold text-gray-900 hover:text-purple-600 transition text-base">
-                                                {{ $item['name'] }}
+                                            <a href="{{ route('productos.ver', $item['slug']) }}" class="font-bold text-gray-900 hover:text-purple-600 transition text-base">
+                                                {{ $item['nombre'] }}
                                             </a>
                                             <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2 mt-1">
-                                                @if(!empty($item['size']))
+                                                @if(!empty($item['talla']))
                                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                                                        Talla: {{ $item['size'] }}
+                                                        Talla: {{ $item['talla'] }}
                                                     </span>
                                                 @endif
                                                 @if(!empty($item['color']))
@@ -70,17 +70,17 @@
                                                 @endif
                                             </div>
                                             <p class="text-gray-500 text-sm mt-2">
-                                                Precio unitario: <span class="font-semibold text-gray-700">₡{{ number_format($item['price'], 0, ',', '.') }}</span>
+                                                Precio unitario: <span class="font-semibold text-gray-700">₡{{ number_format($item['precio'], 0, ',', '.') }}</span>
                                             </p>
                                         </div>
 
                                         <!-- Controles de Cantidad y Subtotal -->
                                         <div class="flex flex-col sm:items-end items-center gap-3">
                                             <!-- Formulario de Cantidad -->
-                                            <form action="{{ route('cart.update', $key) }}" method="POST" class="flex items-center gap-2">
+                                            <form action="{{ route('carrito.actualizar', $clave) }}" method="POST" class="flex items-center gap-2">
                                                 @csrf
                                                 @method('PUT')
-                                                <input type="number" name="quantity" value="{{ $item['quantity'] }}" min="1" max="99"
+                                                <input type="number" name="cantidad" value="{{ $item['cantidad'] }}" min="1" max="99"
                                                     class="w-16 text-center border-gray-300 rounded-lg shadow-sm focus:border-purple-500 focus:ring-purple-500 text-sm py-1">
                                                 <button type="submit" title="Actualizar cantidad" class="p-1.5 bg-gray-100 hover:bg-purple-100 text-gray-600 hover:text-purple-700 rounded-lg transition">
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -89,14 +89,14 @@
                                                 </button>
                                             </form>
 
-                                            <!-- Subtotal de ítem -->
+                                            <!-- Subtotal de item -->
                                             <div class="text-right">
                                                 <span class="text-xs text-gray-400 uppercase tracking-wider block">Subtotal</span>
                                                 <span class="text-lg font-bold text-purple-600">₡{{ number_format($item['subtotal'], 0, ',', '.') }}</span>
                                             </div>
 
-                                            <!-- Botón Eliminar Ítem -->
-                                            <form action="{{ route('cart.remove', $key) }}" method="POST">
+                                            <!-- Boton Eliminar item -->
+                                            <form action="{{ route('carrito.eliminar', $clave) }}" method="POST">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="text-xs text-red-500 hover:text-red-700 font-medium underline transition">
@@ -109,9 +109,9 @@
                             </div>
                         </div>
 
-                        <!-- Botón de Seguir Comprando -->
+                        <!-- Boton de Seguir Comprando -->
                         <div class="pt-2">
-                            <a href="{{ route('products.index') }}" class="inline-flex items-center text-purple-600 hover:text-purple-800 font-semibold transition">
+                            <a href="{{ route('productos.index') }}" class="inline-flex items-center text-purple-600 hover:text-purple-800 font-semibold transition">
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                                 </svg>
@@ -128,7 +128,7 @@
                             </div>
                             
                             <div class="p-6">
-                                <!-- Barra Progreso Envío Gratis -->
+                                <!-- Barra Progreso Envio Gratis -->
                                 <div class="mb-6 p-4 rounded-lg bg-purple-50 border border-purple-100">
                                     @if($subtotal > 50000)
                                         <div class="flex items-center text-green-700 font-medium text-sm">
@@ -156,14 +156,14 @@
                                     </div>
                                     <div class="flex justify-between text-gray-600 text-sm">
                                         <span>IVA (13% Costa Rica)</span>
-                                        <span class="font-semibold text-gray-900">₡{{ number_format($tax, 0, ',', '.') }}</span>
+                                        <span class="font-semibold text-gray-900">₡{{ number_format($impuesto, 0, ',', '.') }}</span>
                                     </div>
                                     <div class="flex justify-between text-gray-600 text-sm">
                                         <span>Envío</span>
-                                        @if($shipping == 0)
+                                        @if($envio == 0)
                                             <span class="font-bold text-green-600">GRATIS</span>
                                         @else
-                                            <span class="font-semibold text-gray-900">₡{{ number_format($shipping, 0, ',', '.') }}</span>
+                                            <span class="font-semibold text-gray-900">₡{{ number_format($envio, 0, ',', '.') }}</span>
                                         @endif
                                     </div>
 
@@ -173,8 +173,8 @@
                                     </div>
                                 </div>
 
-                                <!-- Botón de Checkout -->
-                                <a href="#" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3.5 px-4 rounded-xl transition duration-200 text-center shadow-lg shadow-purple-200 block">
+                                <!-- Boton de Checkout -->
+                                <a href="{{ route('checkout.index') }}" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3.5 px-4 rounded-xl transition duration-200 text-center shadow-lg shadow-purple-200 block">
                                     Proceder al Pago →
                                 </a>
 
@@ -186,14 +186,14 @@
                     </div>
                 </div>
             @else
-                <!-- Estado Carrito Vacío -->
+                <!-- Estado Carrito Vacio -->
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-12 text-center max-w-xl mx-auto my-8">
                     <div class="w-24 h-24 bg-purple-50 text-purple-500 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl">
                         🛒
                     </div>
                     <h2 class="text-2xl font-bold text-gray-900 mb-2">Tu carrito está vacío</h2>
                     <p class="text-gray-500 mb-8">Parece que aún no has agregado productos a tu carrito. ¡Explora nuestro catálogo y descubre las últimas tendencias de moda!</p>
-                    <a href="{{ route('products.index') }}" class="inline-flex items-center justify-center bg-purple-600 hover:bg-purple-700 text-white font-bold py-3.5 px-8 rounded-xl shadow-md transition">
+                    <a href="{{ route('productos.index') }}" class="inline-flex items-center justify-center bg-purple-600 hover:bg-purple-700 text-white font-bold py-3.5 px-8 rounded-xl shadow-md transition">
                         Ver Catálogo de Productos
                     </a>
                 </div>
@@ -243,14 +243,14 @@
                     </p>
                 </div>
 
-                <!-- Botones de Acción -->
+                <!-- Botones de Accion -->
                 <div class="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 pt-2">
                     <button type="button" 
                             @click="showModal = false" 
                             class="w-full sm:w-auto px-6 py-3 rounded-xl bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-900 font-bold focus:outline-none transition text-sm shadow-sm">
                         Cancelar
                     </button>
-                    <form action="{{ route('cart.clear') }}" method="POST" class="w-full sm:w-auto">
+                    <form action="{{ route('carrito.vaciar') }}" method="POST" class="w-full sm:w-auto">
                         @csrf
                         @method('DELETE')
                         <button type="submit" 

@@ -9,7 +9,7 @@
                         <h3 class="font-bold text-lg mb-4">Filtros</h3>
 
                         <!-- Buscar -->
-                        <form action="{{ route('products.search') }}" method="GET" class="mb-6">
+                        <form action="{{ route('productos.buscar') }}" method="GET" class="mb-6">
                             <input type="text" name="q" placeholder="Buscar producto..."
                                 class="w-full border-gray-300 rounded-lg shadow-sm focus:border-purple-500 focus:ring-purple-500"
                                 value="{{ request('q') }}">
@@ -21,20 +21,20 @@
                         <!-- Categorias -->
                         <h4 class="font-semibold mb-2">Categorias</h4>
                         <div class="space-y-2 mb-6">
-                            <a href="{{ route('products.index') }}" class="block text-sm {{ !request('categoria') ? 'text-purple-600 font-semibold' : 'text-gray-600 hover:text-purple-600' }}">
+                            <a href="{{ route('productos.index') }}" class="block text-sm {{ !request('categoria') ? 'text-purple-600 font-semibold' : 'text-gray-600 hover:text-purple-600' }}">
                                 Todos
                             </a>
-                            @foreach($categories as $category)
-                                <a href="{{ route('products.index', ['categoria' => $category->id]) }}"
-                                    class="block text-sm {{ request('categoria') == $category->id ? 'text-purple-600 font-semibold' : 'text-gray-600 hover:text-purple-600' }}">
-                                    {{ $category->name }}
+                            @foreach($categorias as $categoria)
+                                <a href="{{ route('productos.index', ['categoria' => $categoria->id]) }}"
+                                    class="block text-sm {{ request('categoria') == $categoria->id ? 'text-purple-600 font-semibold' : 'text-gray-600 hover:text-purple-600' }}">
+                                    {{ $categoria->nombre }}
                                 </a>
                             @endforeach
                         </div>
 
                         <!-- Precio -->
                         <h4 class="font-semibold mb-2">Precio</h4>
-                        <form action="{{ route('products.index') }}" method="GET" class="space-y-2">
+                        <form action="{{ route('productos.index') }}" method="GET" class="space-y-2">
                             <input type="hidden" name="categoria" value="{{ request('categoria') }}">
                             <input type="number" name="precio_min" placeholder="Min"
                                 class="w-full border-gray-300 rounded-lg shadow-sm text-sm"
@@ -53,20 +53,20 @@
                 <div class="flex-1">
                     <h1 class="text-2xl font-bold text-gray-800 mb-6">Catalogo de Productos</h1>
 
-                    @if($products->count() > 0)
+                    @if($productos->count() > 0)
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                            @foreach($products as $product)
-                                <a href="{{ route('products.show', $product->slug) }}" class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+                            @foreach($productos as $producto)
+                                <a href="{{ route('productos.ver', $producto->slug) }}" class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
                                     <div class="h-48 bg-gray-200">
-                                        <img src="{{ asset($product->image) }}" alt="{{ $product->name }}" class="h-full w-full object-cover">
+                                        <img src="{{ asset($producto->imagen) }}" alt="{{ $producto->nombre }}" class="h-full w-full object-cover">
                                     </div>
                                     <div class="p-4">
-                                        <span class="text-xs text-purple-600 font-semibold">{{ $product->category->name }}</span>
-                                        <h3 class="font-semibold text-gray-800 mt-1">{{ $product->name }}</h3>
-                                        <p class="text-gray-500 text-sm mt-1 line-clamp-2">{{ $product->description }}</p>
+                                        <span class="text-xs text-purple-600 font-semibold">{{ $producto->categoria->nombre }}</span>
+                                        <h3 class="font-semibold text-gray-800 mt-1">{{ $producto->nombre }}</h3>
+                                        <p class="text-gray-500 text-sm mt-1 line-clamp-2">{{ $producto->descripcion }}</p>
                                         <div class="mt-3 flex justify-between items-center">
-                                            <p class="text-lg font-bold text-purple-600">₡{{ number_format($product->price, 0, ',', '.') }}</p>
-                                            @if($product->stock > 0)
+                                            <p class="text-lg font-bold text-purple-600">₡{{ number_format($producto->precio, 0, ',', '.') }}</p>
+                                            @if($producto->stock > 0)
                                                 <span class="text-xs text-green-600 bg-green-100 px-2 py-1 rounded">En stock</span>
                                             @else
                                                 <span class="text-xs text-red-600 bg-red-100 px-2 py-1 rounded">Agotado</span>
@@ -78,12 +78,12 @@
                         </div>
 
                         <div class="mt-6">
-                            {{ $products->links() }}
+                            {{ $productos->links() }}
                         </div>
                     @else
                         <div class="bg-white rounded-lg shadow-md p-8 text-center">
                             <p class="text-gray-500 text-lg">No se encontraron productos.</p>
-                            <a href="{{ route('products.index') }}" class="mt-4 inline-block text-purple-600 hover:text-purple-800 font-semibold">
+                            <a href="{{ route('productos.index') }}" class="mt-4 inline-block text-purple-600 hover:text-purple-800 font-semibold">
                                 Ver todos los productos
                             </a>
                         </div>

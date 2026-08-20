@@ -8,22 +8,20 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('order_items', function (Blueprint $table) {
+        Schema::create('pedido_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('order_id')->constrained()->onDelete('cascade');
-            $table->foreignId('product_id')->constrained()->onDelete('cascade');
-            $table->string('product_name');
-            $table->decimal('price', 10, 2);
-            $table->integer('quantity');
-            $table->string('size')->nullable();
+            $table->foreignId('pedido_id')->constrained('pedidos')->cascadeOnDelete();
+            $table->foreignId('producto_id')->constrained('productos')->cascadeOnDelete();
+            $table->integer('cantidad');
+            $table->decimal('precio', 10, 2);
+            $table->string('talla')->nullable();
             $table->string('color')->nullable();
-            $table->decimal('subtotal', 10, 2);
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('order_items');
+        Schema::dropIfExists('pedido_items');
     }
 };
