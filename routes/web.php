@@ -29,6 +29,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pedido/confirmacion/{pedido}', [OrderController::class, 'confirmacion'])->name('pedido.confirmacion');
     Route::get('/mis-pedidos', [OrderController::class, 'index'])->name('pedidos.index');
     Route::get('/pedido/{pedido}', [OrderController::class, 'ver'])->name('pedido.ver');
+
+    // Reportes PDF (Etapa 4)
+    Route::get('/pedido/{pedido}/factura', [OrderController::class, 'factura'])->name('pedido.factura');
+    Route::get('/reportes/ventas', [OrderController::class, 'reporteVentas'])->name('reportes.ventas');
+    Route::get('/reportes/cliente/{usuario?}', [OrderController::class, 'reporteCliente'])->name('reportes.cliente');
 });
 
 

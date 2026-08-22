@@ -1,8 +1,44 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Mis Pedidos
-        </h2>
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                Mis Pedidos
+            </h2>
+            <div class="flex flex-wrap items-center gap-3">
+                <a href="{{ route('reportes.cliente') }}" target="_blank" class="bg-red-600 hover:bg-red-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    Historial Cliente (PDF)
+                </a>
+                <form action="{{ route('reportes.ventas') }}" method="GET" target="_blank" class="flex items-center gap-2">
+                    <select name="mes" class="text-xs rounded-lg border-gray-300 py-1.5 px-2">
+                        <option value="1" {{ date('n') == 1 ? 'selected' : '' }}>Enero</option>
+                        <option value="2" {{ date('n') == 2 ? 'selected' : '' }}>Febrero</option>
+                        <option value="3" {{ date('n') == 3 ? 'selected' : '' }}>Marzo</option>
+                        <option value="4" {{ date('n') == 4 ? 'selected' : '' }}>Abril</option>
+                        <option value="5" {{ date('n') == 5 ? 'selected' : '' }}>Mayo</option>
+                        <option value="6" {{ date('n') == 6 ? 'selected' : '' }}>Junio</option>
+                        <option value="7" {{ date('n') == 7 ? 'selected' : '' }}>Julio</option>
+                        <option value="8" {{ date('n') == 8 ? 'selected' : '' }}>Agosto</option>
+                        <option value="9" {{ date('n') == 9 ? 'selected' : '' }}>Septiembre</option>
+                        <option value="10" {{ date('n') == 10 ? 'selected' : '' }}>Octubre</option>
+                        <option value="11" {{ date('n') == 11 ? 'selected' : '' }}>Noviembre</option>
+                        <option value="12" {{ date('n') == 12 ? 'selected' : '' }}>Diciembre</option>
+                    </select>
+                    <select name="anio" class="text-xs rounded-lg border-gray-300 py-1.5 px-2">
+                        <option value="2026" selected>2026</option>
+                        <option value="2025">2025</option>
+                    </select>
+                    <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        Reporte Ventas Mes (PDF)
+                    </button>
+                </form>
+            </div>
+        </div>
     </x-slot>
 
     <div class="py-12">
