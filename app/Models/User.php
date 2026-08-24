@@ -17,6 +17,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'cart_data',
     ];
 
     protected $hidden = [
@@ -29,6 +30,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'cart_data' => 'array',
         ];
     }
 

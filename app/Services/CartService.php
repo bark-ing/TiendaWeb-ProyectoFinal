@@ -8,7 +8,14 @@ class CartService
 {
     public function obtenerCarrito()
     {
-        return session()->get('cart', []);
+        $carrito = session()->get('cart', []);
+
+        if (empty($carrito) && auth()->check()) {
+            $carrito = auth()->user()->cart_data ?? [];
+            session()->put('cart', $carrito);
+        }
+
+        return $carrito;
     }
 
     public function agregar($productoId, $cantidad = 1, $talla = null, $color = null)
@@ -43,6 +50,10 @@ class CartService
 
         session()->put('cart', $carrito);
 
+        if (auth()->check()) {
+            auth()->user()->update(['cart_data' => $carrito]);
+        }
+
         return $carrito;
     }
 
@@ -59,6 +70,10 @@ class CartService
             $carrito[$claveCarrito]['subtotal'] = $carrito[$claveCarrito]['precio'] * $cant;
 
             session()->put('cart', $carrito);
+
+            if (auth()->check()) {
+                auth()->user()->update(['cart_data' => $carrito]);
+            }
         }
 
         return $carrito;
@@ -71,6 +86,10 @@ class CartService
         if (isset($carrito[$claveCarrito])) {
             unset($carrito[$claveCarrito]);
             session()->put('cart', $carrito);
+
+            if (auth()->check()) {
+                auth()->user()->update(['cart_data' => $carrito]);
+            }
         }
 
         return $carrito;
@@ -79,6 +98,10 @@ class CartService
     public function vaciar()
     {
         session()->forget('cart');
+
+        if (auth()->check()) {
+            auth()->user()->update(['cart_data' => []]);
+        }
     }
 
     public function obtenerSubtotal()
