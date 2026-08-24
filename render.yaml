@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: vexians-boutique
+    env: docker
+    plan: free
+    region: oregon # Puedes cambiar la región según tu preferencia
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_URL
+        value: https://vexians-boutique.onrender.com # Modificar con tu dominio final de Render
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_PORT
+        value: 5432
+      - key: DB_HOST
+        sync: false # Colocar el host de tu base de datos Neon
+      - key: DB_DATABASE
+        sync: false # Nombre de la base de datos Neon
+      - key: DB_USERNAME
+        sync: false # Usuario de la base de datos Neon
+      - key: DB_PASSWORD
+        sync: false # Contraseña de la base de datos Neon
+      - key: APP_KEY
+        sync: false # Deberás generar tu clave localmente con 'php artisan key:generate --show' e ingresarla aquí

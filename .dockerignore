@@ -1,0 +1,16 @@
+/node_modules
+/vendor
+/storage/*.key
+.env
+.git
+.github
+Dockerfile
+docker-compose.yml
+.dockerignore
+/public/build
+README.md
+/tests
+/database/*.sqlite
+phpunit.xml
+.editorconfig
+.gitattributes
